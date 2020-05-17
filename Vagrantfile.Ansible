@@ -1,0 +1,130 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# This Vagrantfile is my development environment for Ansible.
+# It fires up the current and previous major versions of some major distributions.
+
+# Boxes from: https://app.vagrantup.com/bento
+
+# Name boxes and machines here:
+UBUNTU="ubuntu18"
+UBUNTU_BOX="bento/ubuntu-18.04"
+UBUNTU_OLD="ubuntu16"
+UBUNTU_BOX_OLD="bento/ubuntu-16.04"
+DEBIAN_OLD="debian9"
+DEBIAN_BOX_OLD="bento/debian-9.9"
+DEBIAN="debian10"
+DEBIAN_BOX="bento/debian-10"
+CENTOS_OLD="centos7"
+CENTOS_BOX_OLD="bento/centos-7.6"
+CENTOS="centos8"
+CENTOS_BOX="bento/centos-8"
+FEDORA_OLD="fedora30"
+FEDORA_BOX_OLD="bento/fedora-30"
+FEDORA="fedora31"
+FEDORA_BOX="bento/fedora-31"
+OPENSUSE="opensuse42"
+OPENSUSE_BOX="bento/opensuse-leap-42"
+OPENSUSE_OLD="opensuse15"
+OPENSUSE_BOX_OLD="bento/opensuse-leap-15"
+
+ENV["VAGRANT_DEFAULT_PROVIDER"] = "virtualbox"
+
+Vagrant.configure(2) do |config|
+ config.ssh.insert_key = false
+ config.vm.synced_folder ".", "/vagrant", disabled: true
+ config.vm.provider :virtualbox do |vb|
+ vb.customize ["modifyvm", :id, "--memory", "512"]
+end
+
+# Ubuntu Old
+ config.vm.define UBUNTU_OLD do |srv|
+ srv.vm.hostname = UBUNTU_OLD
+ srv.vm.box = UBUNTU_BOX_OLD
+ srv.vm.network :private_network, ip: "192.168.60.15"
+ srv.vm.provision "shell",
+  inline: "apt-get -y update --quiet"
+ end
+
+# Ubuntu New
+ config.vm.define UBUNTU do |srv|
+ srv.vm.hostname = UBUNTU
+ srv.vm.box = UBUNTU_BOX
+ srv.vm.network :private_network, ip: "192.168.60.16"
+ srv.vm.provision "shell",
+  inline: "apt-get -y update --quiet"
+ end
+
+# Debian Old
+ config.vm.define DEBIAN_OLD do |srv|
+ srv.vm.hostname = DEBIAN_OLD
+ srv.vm.box = DEBIAN_BOX_OLD
+ srv.vm.network :private_network, ip: "192.168.60.17"
+ srv.vm.provision "shell",
+  inline: "apt-get -y update --quiet"
+ end
+
+# Debian New
+ config.vm.define DEBIAN do |srv|
+ srv.vm.hostname = DEBIAN
+ srv.vm.box = DEBIAN_BOX
+ srv.vm.network :private_network, ip: "192.168.60.18"
+ srv.vm.provision "shell",
+  inline: "apt-get -y update --quiet"
+ end
+
+# CentOS Old
+ config.vm.define CENTOS_OLD do |srv|
+ srv.vm.hostname = CENTOS_OLD
+ srv.vm.box = CENTOS_BOX_OLD
+ srv.vm.network :private_network, ip: "192.168.60.19"
+ srv.vm.provision "shell",
+  inline: "yum -y -q install libselinux-python vim-minimal"
+ end
+
+# CentOS New
+ config.vm.define CENTOS do |srv|
+ srv.vm.hostname = CENTOS
+ srv.vm.box = CENTOS_BOX
+ srv.vm.network :private_network, ip: "192.168.60.20"
+ srv.vm.provision "shell",
+  inline: "yum -y -q install vim-minimal"
+ end
+
+# Fedora Old
+ config.vm.define FEDORA_OLD do |srv|
+ srv.vm.hostname = FEDORA_OLD
+ srv.vm.box = FEDORA_BOX_OLD
+ srv.vm.network :private_network, ip: "192.168.60.21"
+ srv.vm.provision "shell",
+  inline: "sudo dnf -y update vim-minimal --quiet && sudo dnf -y install python3-libselinux python3-dnf vim sudo --quiet"
+ end
+
+# Fedora New
+ config.vm.define FEDORA do |srv|
+ srv.vm.hostname = FEDORA
+ srv.vm.box = FEDORA_BOX
+ srv.vm.network :private_network, ip: "192.168.60.22"
+ srv.vm.provision "shell",
+  inline: "sudo dnf -y update vim-minimal --quiet && sudo dnf -y install python3-libselinux python3-dnf vim sudo --quiet"
+ end
+
+# OpenSUSE Old
+ config.vm.define OPENSUSE_OLD do |srv|
+ srv.vm.hostname = OPENSUSE_OLD
+ srv.vm.box = OPENSUSE_BOX_OLD
+ srv.vm.network :private_network, ip: "192.168.60.23"
+ srv.vm.provision "shell",
+  inline: "sudo zypper -q refresh"
+ end
+
+# OpenSUSE New
+ config.vm.define OPENSUSE do |srv|
+ srv.vm.hostname = OPENSUSE
+ srv.vm.box = OPENSUSE_BOX
+ srv.vm.network :private_network, ip: "192.168.60.24"
+ srv.vm.provision "shell",
+  inline: "sudo zypper -q refresh"
+ end
+
+end
